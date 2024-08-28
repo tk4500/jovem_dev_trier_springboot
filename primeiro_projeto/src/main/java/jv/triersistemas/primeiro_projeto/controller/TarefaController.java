@@ -30,9 +30,12 @@ public class TarefaController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<TarefaDto> getTarefaPorId(@PathVariable Long id) {
-		return tarefaService.findById(id).map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+	public ResponseEntity<?> getTarefaPorId(@PathVariable Long id) {
+		try {
+			return ResponseEntity.ok(tarefaService.findById(id));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+		}
 	}
 
 	@PostMapping
@@ -41,13 +44,22 @@ public class TarefaController {
 	}
 
 	@PutMapping("/{id}")
-	public TarefaDto atualizarTarefa(@PathVariable Long id, @RequestBody TarefaDto tarefaAtualizada) {
-		return tarefaService.atualizarTarefa(id, tarefaAtualizada);
+	public ResponseEntity<?> atualizarTarefa(@PathVariable Long id, @RequestBody TarefaDto tarefaAtualizada) {
+		try {
+			return ResponseEntity.ok(tarefaService.atualizarTarefa(id, tarefaAtualizada));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+		}
 	}
 
 	@DeleteMapping("/{id}")
-	public void removerTarefa(@PathVariable Long id) {
-		tarefaService.removerTarefa(id);
+	public ResponseEntity<String> removerTarefa(@PathVariable Long id) {
+		try {
+			tarefaService.removerTarefa(id);
+			return ResponseEntity.ok().body("{\n	\"result\" : \"" + id + " removido com sucesso\" \n}");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+		}
 	}
 
 }

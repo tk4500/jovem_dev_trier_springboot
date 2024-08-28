@@ -1,10 +1,10 @@
 package jv.triersistemas.desafio_dados.service.impl;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jv.triersistemas.desafio_dados.dto.DadosDto;
@@ -13,8 +13,10 @@ import jv.triersistemas.desafio_dados.service.DadosService;
 @Service
 public class DadosServiceImpl implements DadosService {
 
-	private DadosDto dado = new DadosDto();
-	List<Integer> dados = new ArrayList<>();
+	@Autowired
+	private DadosDto dado;
+	@Autowired
+	List<Integer> dados;
 
 	@Override
 	public Optional<DadosDto> lancaDados(int qtdDados, int valorDados) {
