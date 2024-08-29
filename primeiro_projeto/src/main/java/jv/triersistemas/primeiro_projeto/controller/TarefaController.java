@@ -37,16 +37,30 @@ public class TarefaController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		}
 	}
-
-	@PostMapping
-	public TarefaDto adicionarTarefa(@RequestBody TarefaDto novaTarefa) {
-		return tarefaService.adicionarTarefa(novaTarefa);
+	
+	@GetMapping("/incompleta")
+	public ResponseEntity<?> getTarefaImcompletaPorCategoria(@RequestBody TarefaDto tarefaIncompleta) {
+		try {
+			return ResponseEntity.ok(tarefaService.getIncompleta(tarefaIncompleta));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+		}
 	}
 
-	@PutMapping("/{id}")
-	public ResponseEntity<?> atualizarTarefa(@PathVariable Long id, @RequestBody TarefaDto tarefaAtualizada) {
+	@PostMapping
+	public ResponseEntity<?> adicionarTarefa(@RequestBody TarefaDto novaTarefa) {
 		try {
-			return ResponseEntity.ok(tarefaService.atualizarTarefa(id, tarefaAtualizada));
+			return ResponseEntity.ok(tarefaService.adicionarTarefa(novaTarefa));
+
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+		}
+	}
+
+	@PutMapping
+	public ResponseEntity<?> atualizarTarefa(@RequestBody TarefaDto tarefaAtualizada) {
+		try {
+				return ResponseEntity.ok(tarefaService.atualizarTarefa(tarefaAtualizada));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		}
@@ -61,5 +75,5 @@ public class TarefaController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		}
 	}
-
 }
+

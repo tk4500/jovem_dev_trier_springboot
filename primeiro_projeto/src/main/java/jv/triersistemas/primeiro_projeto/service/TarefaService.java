@@ -11,9 +11,11 @@ public interface TarefaService {
 	
 	TarefaDto findById(Long id);
 	
-	TarefaDto adicionarTarefa(TarefaDto novaTarefa);
-	
-	TarefaDto atualizarTarefa(Long id, TarefaDto tarefaAtualizada);
+	TarefaDto atualizarTarefa(TarefaDto tarefaAtualizada);
 	
 	void removerTarefa(Long id);
+
+	TarefaDto adicionarTarefa(TarefaDto novaTarefa);
+
+	List<TarefaDto> getIncompleta(TarefaDto tarefaIncompleta);
 }
