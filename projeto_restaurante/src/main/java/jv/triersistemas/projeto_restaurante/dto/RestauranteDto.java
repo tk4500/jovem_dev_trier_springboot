@@ -1,6 +1,5 @@
 package jv.triersistemas.projeto_restaurante.dto;
 
-import java.util.List;
 
 import jv.triersistemas.projeto_restaurante.entity.RestauranteEntity;
 import jv.triersistemas.projeto_restaurante.enums.TipoComidaEnum;

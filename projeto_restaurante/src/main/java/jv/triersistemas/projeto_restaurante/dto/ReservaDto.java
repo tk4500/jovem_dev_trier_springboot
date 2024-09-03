@@ -1,7 +1,6 @@
 package jv.triersistemas.projeto_restaurante.dto;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import jv.triersistemas.projeto_restaurante.entity.ReservaEntity;
 import jv.triersistemas.projeto_restaurante.enums.StatusEnum;

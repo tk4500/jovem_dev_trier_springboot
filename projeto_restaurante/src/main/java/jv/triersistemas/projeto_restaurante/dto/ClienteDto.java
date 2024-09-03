@@ -2,8 +2,6 @@ package jv.triersistemas.projeto_restaurante.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
-
 import jv.triersistemas.projeto_restaurante.entity.ClienteEntity;
 import jv.triersistemas.projeto_restaurante.enums.SexoEnum;
 import lombok.AllArgsConstructor;
