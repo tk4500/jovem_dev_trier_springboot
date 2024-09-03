@@ -33,7 +33,8 @@ public class CategoriaServiceImpl implements CategoriaService{
 
 	@Override
 	public CategoriaDto atualizarCategoria(Long id, CategoriaDto categoriaAtualizada) {
-		findById(id);
+		var entidade = findById(id);
+		
 		var entidadePersistida = repository.save(new CategoriaEntity(categoriaAtualizada));
         return new CategoriaDto(entidadePersistida);
 	}

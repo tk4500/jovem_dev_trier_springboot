@@ -87,11 +87,15 @@ public class TarefaServiceImpl implements TarefaService {
 		
 		try {
 			tarefaIncompleta.getIdCategoria().equals(null);
-			var catDto = getCategoria(tarefaIncompleta.getIdCategoria());
+			var catOpt = catRepository.findById(tarefaIncompleta.getIdCategoria());
+			var catEnt = catOpt.orElseThrow(()-> new IllegalArgumentException("não foi possivel encontrar a categoria"));
+			return catEnt.getTarefas().stream().map(TarefaDto::new).toList();
+			
 		}catch (NullPointerException e) {
-			var catDto = getCategoria(tarefaIncompleta.getNomeCategoria());
+			var catOpt = catRepository.findByNome(tarefaIncompleta.getNomeCategoria());
+			var catEnt = catOpt.orElseThrow(()-> new IllegalArgumentException("não foi possivel encontrar a categoria"));
+			return catEnt.getTarefas().stream().map(TarefaDto::new).toList();
 		}
-		return null;
 	}
 
 
