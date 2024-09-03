@@ -26,7 +26,7 @@ public class TarefaEntity {
 	private Long id;
 	private String titulo;
 	private String descricao;
-	private LocalDate dataCriacao;
+	private LocalDate dataCriacao = LocalDate.now();
 	private LocalDate dataExpiracao;
 	private Boolean completa;
 	
@@ -40,7 +40,6 @@ public class TarefaEntity {
 		this.descricao = dto.getDescricao();
 		this.completa = dto.isCompleta();
 		this.categoria = new CategoriaEntity(dto.getCategoria());
-		this.dataCriacao = dto.getDataCriacao();
 		this.dataExpiracao = dto.getDataExpiracao();
 	}
 }
