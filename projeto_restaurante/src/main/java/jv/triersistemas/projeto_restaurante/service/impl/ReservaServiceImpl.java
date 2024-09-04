@@ -6,10 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jv.triersistemas.projeto_restaurante.dto.ReservaDto;
-import jv.triersistemas.projeto_restaurante.entity.ClienteEntity;
 import jv.triersistemas.projeto_restaurante.entity.ReservaEntity;
 import jv.triersistemas.projeto_restaurante.enums.StatusEnum;
-import jv.triersistemas.projeto_restaurante.repository.ClienteRepository;
 import jv.triersistemas.projeto_restaurante.repository.ReservaRepository;
 import jv.triersistemas.projeto_restaurante.service.ReservaService;
 
@@ -19,8 +17,6 @@ public class ReservaServiceImpl implements ReservaService {
 	@Autowired
 	ReservaRepository reRepository;
 
-	@Autowired
-	private ClienteRepository clRepository;
 
 	@Override
 	public String getDisponibilidade(Integer mesa, LocalDate data) throws IllegalArgumentException {
@@ -31,99 +27,56 @@ public class ReservaServiceImpl implements ReservaService {
 		return "Mesa " + mesa + " ainda está disponivel";
 	}
 
-	@Override
-	public ReservaDto postReserva(ReservaDto reserva) throws IllegalArgumentException {
-		testeReserva(reserva);
-		if (!isDisponivel(reserva.getNumeroMesa(), reserva.getDataReserva())) {
-			throw new IllegalArgumentException("Mesa já reservada para a data");
-		}
-		var resEnt = new ReservaEntity(reserva);
-		resEnt.atualizaCliente(getCliente(reserva, reserva.getIdCliente()));
-		return salvar(resEnt);
-	}
-
-	@Override
-	public ReservaDto putReserva(Long id, StatusEnum status) throws IllegalArgumentException {
-		switch (status) {
-		case CONCLUIDA:
-			return isConcluida(id);
-		case CANCELADA:
-			return isCancelada(id);
-		default:
-			return null;
-		}
-
-	}
-
-	private void testeReserva(ReservaDto reserva) throws IllegalArgumentException {
-		testeMesa(reserva.getNumeroMesa());
-		testePessoas(reserva.getNumeroPessoas());
-		testeData(reserva.getDataReserva());
-	}
-
 	private void testeMesa(Integer mesa) throws IllegalArgumentException {
 		if (mesa < 1 || mesa > 20)
 			throw new IllegalArgumentException("Numero da Mesa Invalido");
-	}
-
-	private void testePessoas(Integer numeroPessoas) throws IllegalArgumentException {
-		if (numeroPessoas < 1 || numeroPessoas > 10)
-			throw new IllegalArgumentException("Quantidade de Pessoas Invalido");
-	}
-
-	private void testeData(LocalDate dataReserva) throws IllegalArgumentException {
-		if (dataReserva.isBefore(LocalDate.now()))
-			throw new IllegalArgumentException("Data Invalida");
 	}
 
 	private boolean isDisponivel(Integer mesa, LocalDate reserva) {
 		var reList = reRepository.existsByNumeroMesaAndDataReserva(mesa, reserva);
 		return !reList;
 	}
-
-	private ClienteEntity getCliente(ReservaDto reserva, Long idCliente) throws IllegalArgumentException {
-		var clOpt = clRepository.findById(idCliente);
-		var clEnt = clOpt.orElseThrow(() -> new IllegalArgumentException("Valor do id invalido"));
-		return clEnt;
+	
+	@Override
+	public ReservaDto postReserva(ReservaDto reserva) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	private ReservaDto isConcluida(Long id) throws IllegalArgumentException {
-		var resEnt = findById(id);
-		if (reservaIsBefore(resEnt)) {
-			throw new IllegalArgumentException(
-					"Reserva não pode ser concluida, data atual ainda é anterior a data de reserva");
+	@Override
+	public ReservaDto alteraStatus(Long id, StatusEnum status) throws IllegalArgumentException {
+		var resEnt = reRepository.findById(id).orElseThrow(()->new IllegalArgumentException("id da reserva invalido"));
+		switch (status) {
+		case CANCELADA:
+			if(resEnt.getDataReserva().isBefore(LocalDate.now())) {
+				return atualizaStatus(resEnt,status);
+				
+			}else {
+				throw new IllegalArgumentException("Mesa não pode ser cancelada, o cancelamento deve ser feito com 1 dia de antecedência");
+			}
+		case CONCLUIDA:
+			if(!resEnt.getDataReserva().isBefore(LocalDate.now())) {
+				return atualizaStatus(resEnt,status);
+			}else {
+				throw new IllegalArgumentException("Mesa não pode ser concluida, a conclusão deve ser feita no mesmo dia ou posterior");
+			}
+		case INADIMPLENTE:
+			throw new IllegalArgumentException("valor INADIMPLENTE não pode ser cadastrado manualmente");
+		default:
+			return atualizaStatus(resEnt,status);
 		}
-		resEnt.alteraStatus(StatusEnum.CONCLUIDA);
-		return salvar(resEnt);
-
-	}
-
-	private ReservaDto isCancelada(Long id) throws IllegalArgumentException {
-		var resEnt = findById(id);
-		if (!reservaIsBefore(resEnt)) {
-			throw new IllegalArgumentException(
-					"Reserva não pode ser cancelada, a data atual é maior que a data da reserva");
-		}
-		resEnt.alteraStatus(StatusEnum.CANCELADA);
-		return salvar(resEnt);
-		
-	}
-
-	private ReservaEntity findById(Long id) throws IllegalArgumentException {
-		var resOpt = reRepository.findById(id);
-		return resOpt.orElseThrow(() -> new IllegalArgumentException("Valor do id invalido"));
-	}
-
-	private boolean reservaIsBefore(ReservaEntity reserva) {
-		return reserva.getDataReserva().isBefore(LocalDate.now());
 	}
 	
-	private ReservaDto salvar(ReservaEntity resEnt) {
-		var resEnt1 = reRepository.save(resEnt);
-		var resDto = new ReservaDto(resEnt1);
-		resDto.setNomeCliente(resEnt1.getCliente().getNome());
-		resDto.setIdCliente(resEnt1.getCliente().getId());
-		return resDto;
+	private ReservaDto atualizaStatus(ReservaEntity resEnt, StatusEnum status) {
+		resEnt.atualizaStatus(status);
+		return reservaSave(resEnt);
 	}
+	
+	private ReservaDto reservaSave(ReservaEntity resEnt) {
+		var resSave = reRepository.save(resEnt);
+		return new ReservaDto(resSave);
+	}
+	
+
 
 }

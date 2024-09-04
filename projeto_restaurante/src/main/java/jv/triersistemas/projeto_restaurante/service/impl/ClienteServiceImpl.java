@@ -20,14 +20,11 @@ public class ClienteServiceImpl implements ClienteService {
 	@Override
 	public List<ReservaDto> getReservas(Long id) throws IllegalArgumentException {
 		var clEnt = findById(id);
-		return clEnt.getReservas().stream().map(ReservaDto::new).toList();
+		return null;
 	}
 
 	@Override
 	public ClienteDto postCliente(ClienteDto cliente) throws IllegalArgumentException {
-		if (emailExists(cliente.getEmail())) {
-			throw new IllegalArgumentException("Email já cadastrado");
-		}
 		var cliEnt = clRepository.save(new ClienteEntity(cliente));
 		return new ClienteDto(cliEnt);
 
@@ -35,11 +32,7 @@ public class ClienteServiceImpl implements ClienteService {
 
 	@Override
 	public ClienteDto putCliente(ClienteDto cliente) throws IllegalArgumentException {
-		if (!emailEqualsId(cliente.getEmail(), cliente.getId())) {
-			throw new IllegalArgumentException("Email já cadastrado");
-		}
-		var cliEntAt = clRepository.save(atualizaCliente(cliente));
-		return new ClienteDto(cliEntAt);
+		return null;
 	}
 
 	private ClienteEntity findById(Long id) throws IllegalArgumentException {
@@ -56,10 +49,5 @@ public class ClienteServiceImpl implements ClienteService {
 		return clBool.orElse(true);
 	}
 
-	private ClienteEntity atualizaCliente(ClienteDto cliente) {
-		var cliEnt = findById(cliente.getId());
-		cliEnt.atualizaCliente(cliente);
-		return cliEnt;
-	}
 
 }

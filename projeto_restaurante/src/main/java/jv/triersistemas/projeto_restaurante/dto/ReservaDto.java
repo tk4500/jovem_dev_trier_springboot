@@ -20,7 +20,7 @@ public class ReservaDto {
 	private ClienteDto cliente;
 	private MesaDto mesa;
 	
-	ReservaDto(ReservaEntity entity){
+	public ReservaDto(ReservaEntity entity){
 		id = entity.getId();
 		dataReserva = entity.getDataReserva();
 		quantidadePessoas = entity.getQuantidadePessoas();

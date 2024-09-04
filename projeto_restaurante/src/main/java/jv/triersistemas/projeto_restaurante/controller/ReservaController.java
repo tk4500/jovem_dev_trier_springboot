@@ -44,9 +44,9 @@ public class ReservaController {
 	}
 
 	@PutMapping("/status")
-	public ResponseEntity<?> putReserva(@RequestParam("id") Long id, @RequestParam("status") StatusEnum status) {
+	public ResponseEntity<?> alteraStatus(@RequestParam("id") Long id, @RequestParam("status") StatusEnum status) {
 		try {
-			return ResponseEntity.ok(reservaService.putReserva(id, status));
+			return ResponseEntity.ok(reservaService.alteraStatus(id, status));
 		} catch (Exception e) {
 			return ResponseEntity.status(404).body(e.getMessage());
 		}

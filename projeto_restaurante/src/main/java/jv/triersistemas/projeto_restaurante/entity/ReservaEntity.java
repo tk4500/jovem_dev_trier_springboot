@@ -45,4 +45,8 @@ public class ReservaEntity {
 	private MesaEntity mesa;
 	@OneToMany(mappedBy = "reserva", cascade = CascadeType.DETACH)
 	private List<PedidoEntity> pedidos;
+	
+	public void atualizaStatus(StatusEnum status) {
+		this.status = status;
+	}
 }

@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jv.triersistemas.projeto_restaurante.dto.RestauranteDto;
 import jv.triersistemas.projeto_restaurante.enums.TipoComidaEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,5 +39,11 @@ public class RestauranteEntity {
 	private List<ClienteEntity> clientes;
 	@OneToMany(mappedBy = "restaurante", cascade = CascadeType.DETACH)
 	private List<MesaEntity> mesas;
+	
+	public RestauranteEntity(RestauranteDto dto) {
+		nome = dto.getNome();
+		cnpj = dto.getCnpj();
+		estrelas = dto.getEstrelas();
+	}
 
 }

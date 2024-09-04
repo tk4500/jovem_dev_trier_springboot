@@ -11,6 +11,6 @@ public interface ReservaService {
 
 	ReservaDto postReserva(ReservaDto reserva);
 
-	ReservaDto putReserva(Long id, StatusEnum status);
+	Object alteraStatus(Long id, StatusEnum status);
 
 }

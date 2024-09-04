@@ -12,12 +12,10 @@ public class MesaDto {
 	private Long id;
 	private Integer numero;
 	private Integer capacidadePessoas;
-	private RestauranteDto restaurante;
 	
-	MesaDto(MesaEntity entity){
+	public MesaDto(MesaEntity entity){
 		id = entity.getId();
 		numero = entity.getNumero();
 		capacidadePessoas = entity.getCapacidadePessoas();
-		restaurante = new RestauranteDto(entity.getRestaurante());
 	}
 }

@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import jv.triersistemas.projeto_restaurante.entity.MesaEntity;
 
 @Repository
-public interface MesaRepository extends JpaRepository<MesaEntity, Long>{
+public interface MesaRepository extends JpaRepository<MesaEntity, Long>, MesaRepositoryCustom{
 
 }
