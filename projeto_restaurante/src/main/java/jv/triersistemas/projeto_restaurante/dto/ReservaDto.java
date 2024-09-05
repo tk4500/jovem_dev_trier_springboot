@@ -17,8 +17,8 @@ public class ReservaDto {
 	private Integer quantidadePessoas;
 	private StatusEnum status;
 	private String observacao;
-	private ClienteDto cliente;
-	private MesaDto mesa;
+	private Long clienteId;
+	private Long mesaId;
 	
 	public ReservaDto(ReservaEntity entity){
 		id = entity.getId();
@@ -26,8 +26,8 @@ public class ReservaDto {
 		quantidadePessoas = entity.getQuantidadePessoas();
 		status = entity.getStatus();
 		observacao = entity.getObservacao();
-		cliente = new ClienteDto(entity.getCliente());
-		mesa = new MesaDto(entity.getMesa());
+		clienteId = entity.getCliente().getId();
+		mesaId = entity.getMesa().getId();
 	}
 
 }

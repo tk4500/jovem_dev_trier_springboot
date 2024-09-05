@@ -20,28 +20,28 @@ public class ClienteController {
 	@Autowired
 	ClienteService clienteService;
 
-	@GetMapping("/reservas/{id}")
-	public ResponseEntity<?> getReservasporCliente(@PathVariable Long id) {
+	@GetMapping("/{restauranteId}")
+	public ResponseEntity<?> getClientes(@PathVariable Long restauranteId) {
 		try {
-			return ResponseEntity.ok(clienteService.getReservas(id));
+			return ResponseEntity.ok(clienteService.getClientes(restauranteId));
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(404).body(e.getMessage());
 		}
 	}
-
-	@PostMapping
-	public ResponseEntity<?> postCliente(@RequestBody ClienteDto cliente) {
+	
+	@PostMapping("/{restauranteId}")
+	public ResponseEntity<?> cadastroCliente(@PathVariable Long restauranteId,@RequestBody ClienteDto cliente) {
 		try {
-			return ResponseEntity.ok(clienteService.postCliente(cliente));
+			return ResponseEntity.ok(clienteService.cadastroCliente(restauranteId, cliente));
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(404).body(e.getMessage());
 		}
 	}
 
 	@PutMapping
-	public ResponseEntity<?> putCliente(@RequestBody ClienteDto cliente) {
+	public ResponseEntity<?> alteraCliente(@RequestBody ClienteDto cliente) {
 		try {
-			return ResponseEntity.ok(clienteService.putCliente(cliente));
+			return ResponseEntity.ok(clienteService.alteraCliente(cliente));
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(404).body(e.getMessage());
 		}

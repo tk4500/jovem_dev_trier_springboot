@@ -2,6 +2,7 @@ package jv.triersistemas.projeto_restaurante.entity;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -15,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jv.triersistemas.projeto_restaurante.dto.ReservaDto;
 import jv.triersistemas.projeto_restaurante.enums.StatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,8 +36,9 @@ public class ReservaEntity {
 	@Column(nullable = false)
 	private Integer quantidadePessoas;
 	@Enumerated(EnumType.ORDINAL)
+	@Column(nullable = false)
 	private StatusEnum status;
-	@Column(columnDefinition = "TEXT", nullable = false)
+	@Column(columnDefinition = "TEXT")
 	private String observacao;
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	@JoinColumn(name = "cliente_id", nullable = false)
@@ -48,5 +51,17 @@ public class ReservaEntity {
 	
 	public void atualizaStatus(StatusEnum status) {
 		this.status = status;
+	}
+	
+	public ReservaEntity(ReservaDto dto) {
+		 this.dataReserva = dto.getDataReserva();
+		 this.quantidadePessoas = dto.getQuantidadePessoas();
+		 this.status = Optional.of(dto.getStatus()).orElse(StatusEnum.AGENDADA);
+	}
+	public void atualizaMesa(MesaEntity mesa) {
+		this.mesa = mesa;
+	}
+	public void atualizaCliente(ClienteEntity cliente) {
+		this.cliente = cliente;
 	}
 }

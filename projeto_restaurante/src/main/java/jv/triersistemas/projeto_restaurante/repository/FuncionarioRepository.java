@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 import jv.triersistemas.projeto_restaurante.entity.FuncionarioEntity;
 
 @Repository
-public interface FuncionarioRepository extends JpaRepository<FuncionarioEntity, Long>{
+public interface FuncionarioRepository extends JpaRepository<FuncionarioEntity, Long>, FuncionarioRepositoryCustom{
+
+	
 
 }

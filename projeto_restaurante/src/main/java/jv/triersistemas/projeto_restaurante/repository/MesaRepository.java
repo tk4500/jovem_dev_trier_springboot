@@ -8,4 +8,6 @@ import jv.triersistemas.projeto_restaurante.entity.MesaEntity;
 @Repository
 public interface MesaRepository extends JpaRepository<MesaEntity, Long>, MesaRepositoryCustom{
 
+	
+
 }

@@ -1,52 +1,50 @@
 package jv.triersistemas.projeto_restaurante.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jv.triersistemas.projeto_restaurante.dto.ClienteDto;
-import jv.triersistemas.projeto_restaurante.dto.ReservaDto;
 import jv.triersistemas.projeto_restaurante.entity.ClienteEntity;
 import jv.triersistemas.projeto_restaurante.repository.ClienteRepository;
 import jv.triersistemas.projeto_restaurante.service.ClienteService;
+import jv.triersistemas.projeto_restaurante.service.RestauranteService;
 
 @Service
 public class ClienteServiceImpl implements ClienteService {
 
 	@Autowired
 	private ClienteRepository clRepository;
+	@Autowired
+	private RestauranteService restauranteService;
 
 	@Override
-	public List<ReservaDto> getReservas(Long id) throws IllegalArgumentException {
-		var clEnt = findById(id);
-		return null;
+	public List<ClienteDto> getClientes(Long restauranteId) {
+		var cliEnt = clRepository.findByRestauranteId(restauranteId);
+		return cliEnt.stream().map(ClienteDto::new).toList();
 	}
 
 	@Override
-	public ClienteDto postCliente(ClienteDto cliente) throws IllegalArgumentException {
-		var cliEnt = clRepository.save(new ClienteEntity(cliente));
+	public ClienteDto cadastroCliente(Long restauranteId, ClienteDto cliente) {
+		var cliEnt = new ClienteEntity(cliente);
+		cliEnt.setRestaurante(restauranteService.findById(restauranteId).orElseThrow(()->new IllegalArgumentException("id do restaurante invalido")));
+		clRepository.save(cliEnt);
 		return new ClienteDto(cliEnt);
-
 	}
 
 	@Override
-	public ClienteDto putCliente(ClienteDto cliente) throws IllegalArgumentException {
-		return null;
+	public ClienteDto alteraCliente(ClienteDto cliente) {
+		var cliEnt = clRepository.findById(cliente.getId()).orElseThrow(()->new IllegalArgumentException("id do cliente invalido"));
+		 cliEnt.alteraCliente(cliente);
+		 clRepository.save(cliEnt);
+		 return new ClienteDto(cliEnt);
 	}
 
-	private ClienteEntity findById(Long id) throws IllegalArgumentException {
-		return clRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Valor do id invalido"));
-	}
-
-	private boolean emailExists(String email) {
-		return clRepository.findByEmail(email).isPresent();
-	}
-
-	private boolean emailEqualsId(String email, Long id) {
-		var clOpt = clRepository.findByEmail(email);
-		var clBool = clOpt.map(l -> l.getId().equals(id));
-		return clBool.orElse(true);
+	@Override
+	public Optional<ClienteEntity> findById(Long clienteId) {
+		return clRepository.findById(clienteId);
 	}
 
 

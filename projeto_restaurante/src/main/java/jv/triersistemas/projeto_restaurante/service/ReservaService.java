@@ -1,16 +1,20 @@
 package jv.triersistemas.projeto_restaurante.service;
 
-import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 import jv.triersistemas.projeto_restaurante.dto.ReservaDto;
+import jv.triersistemas.projeto_restaurante.entity.ReservaEntity;
 import jv.triersistemas.projeto_restaurante.enums.StatusEnum;
 
 public interface ReservaService {
 
-	String getDisponibilidade(Integer mesa, LocalDate data);
+	ReservaDto alteraStatus(Long id, StatusEnum status);
 
-	ReservaDto postReserva(ReservaDto reserva);
+	ReservaDto fazerReserva(ReservaDto reserva);
 
-	Object alteraStatus(Long id, StatusEnum status);
+	List<ReservaDto> getReservas(Long restauranteId, StatusEnum status);
+
+	Optional<ReservaEntity> findById(Long reservaId);
 
 }

@@ -1,6 +1,7 @@
 package jv.triersistemas.projeto_restaurante.entity;
 
 import java.util.List;
+import java.util.Optional;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -29,7 +30,6 @@ public class RestauranteEntity {
 	private String nome;
 	@Column(length = 14, unique = true, nullable = false)
 	private String cnpj;
-	@Column(columnDefinition = "TINYINT" , nullable = false)
 	private Integer estrelas = 0;
 	@Enumerated(EnumType.ORDINAL)
 	private TipoComidaEnum tipoComida;
@@ -43,7 +43,8 @@ public class RestauranteEntity {
 	public RestauranteEntity(RestauranteDto dto) {
 		nome = dto.getNome();
 		cnpj = dto.getCnpj();
-		estrelas = dto.getEstrelas();
+		estrelas = Optional.ofNullable(dto.getEstrelas()).orElse(estrelas);
+		tipoComida = dto.getTipoComida();
 	}
 
 }

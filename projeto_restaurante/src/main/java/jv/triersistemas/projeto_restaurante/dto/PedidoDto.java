@@ -14,12 +14,12 @@ public class PedidoDto {
 	private Long id;
 	private String descricao;
 	private BigDecimal valor;
-	private ReservaDto reserva;
+	private Long reservaId;
 	
-	PedidoDto(PedidoEntity entity){
+	public PedidoDto(PedidoEntity entity){
 		id = entity.getId();
 		descricao = entity.getDescricao();
 		valor = entity.getValor();
-		reserva = new ReservaDto(entity.getReserva());
+		reservaId = entity.getReserva().getId();
 	}
 }

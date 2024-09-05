@@ -3,6 +3,7 @@ package jv.triersistemas.projeto_restaurante.entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -29,26 +30,45 @@ public class ClienteEntity extends PessoaBaseEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	@Column(nullable = false)
-	private LocalDate dataCadastro = LocalDate.now();
+	private LocalDate dataCadastro;
 	@Column(nullable = false)
-	private Integer quantidadeReservas = 0;
+	private Integer quantidadeReservas;
 	@Column(nullable = false)
-	private BigDecimal quantidadeValorGasto = BigDecimal.valueOf(0);
+	private BigDecimal quantidadeValorGasto;
 	@Column(nullable = false)
-	private Boolean flgBloqueado = false;
+	private Boolean flgBloqueado;
 	@OneToMany(mappedBy = "cliente", cascade = CascadeType.DETACH)
 	private List<ReservaEntity> reservas;
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	@JoinColumn(name = "restaurante_id", nullable = false)
 	private RestauranteEntity restaurante;
-	
+
 	public ClienteEntity(ClienteDto dto) {
-		id = dto.getId();
-		dataCadastro = dto.getDataCadastro();
-		quantidadeReservas = dto.getQuantidadeReservas();
-		quantidadeValorGasto = dto.getQuantidadeValorGasto();
-		flgBloqueado = dto.getFlgBloqueado();
+		 this.dataCadastro = LocalDate.now();
+		 this.quantidadeReservas = 0;
+		 this.quantidadeValorGasto = BigDecimal.valueOf(0);
+		 this.flgBloqueado = false;
+		 this.nome = dto.getNome();
+		 this.cpf = dto.getCpf();
+		 this.sobrenome = dto.getSobrenome();
+		 this.dataNascimento = dto.getDataNascimento();
+		 this.sexo = dto.getSexo();
+		 this.telefone = dto.getTelefone();
 	}
 	
+	public void setRestaurante(RestauranteEntity restaurante) {
+		this.restaurante = restaurante;
+	}
+
+	public void alteraCliente(ClienteDto dto) {
+		 this.flgBloqueado = Optional.ofNullable(dto.getFlgBloqueado()).orElse(this.flgBloqueado);
+		 this.nome = Optional.ofNullable(dto.getNome()).orElse(this.nome);
+		 this.cpf = Optional.ofNullable(dto.getCpf()).orElse(this.cpf);
+		 this.sobrenome = Optional.ofNullable(dto.getSobrenome()).orElse(this.sobrenome);
+		 this.dataNascimento = Optional.ofNullable(dto.getDataNascimento()).orElse(this.dataNascimento);
+		 this.sexo = Optional.ofNullable(dto.getSexo()).orElse(this.sexo);
+		 this.telefone = Optional.ofNullable(dto.getTelefone()).orElse(this.telefone);
+		
+	}
 
 }

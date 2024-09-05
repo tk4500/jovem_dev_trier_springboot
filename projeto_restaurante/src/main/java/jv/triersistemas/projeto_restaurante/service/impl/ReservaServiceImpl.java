@@ -1,6 +1,8 @@
 package jv.triersistemas.projeto_restaurante.service.impl;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,38 +11,30 @@ import jv.triersistemas.projeto_restaurante.dto.ReservaDto;
 import jv.triersistemas.projeto_restaurante.entity.ReservaEntity;
 import jv.triersistemas.projeto_restaurante.enums.StatusEnum;
 import jv.triersistemas.projeto_restaurante.repository.ReservaRepository;
+import jv.triersistemas.projeto_restaurante.service.ClienteService;
+import jv.triersistemas.projeto_restaurante.service.MesaService;
 import jv.triersistemas.projeto_restaurante.service.ReservaService;
+import jv.triersistemas.projeto_restaurante.service.RestauranteService;
 
 @Service
 public class ReservaServiceImpl implements ReservaService {
 
 	@Autowired
 	ReservaRepository reRepository;
-
-
-	@Override
-	public String getDisponibilidade(Integer mesa, LocalDate data) throws IllegalArgumentException {
-		testeMesa(mesa);
-		if (!isDisponivel(mesa, data)) {
-			return "Mesa " + mesa + " já cadastrada para o dia";
-		}
-		return "Mesa " + mesa + " ainda está disponivel";
-	}
-
-	private void testeMesa(Integer mesa) throws IllegalArgumentException {
-		if (mesa < 1 || mesa > 20)
-			throw new IllegalArgumentException("Numero da Mesa Invalido");
-	}
-
-	private boolean isDisponivel(Integer mesa, LocalDate reserva) {
-		var reList = reRepository.existsByNumeroMesaAndDataReserva(mesa, reserva);
-		return !reList;
-	}
+	@Autowired
+	ClienteService clService;
+	@Autowired
+	MesaService meService;
+	@Autowired
+	RestauranteService restauranteService;
 	
 	@Override
-	public ReservaDto postReserva(ReservaDto reserva) {
-		// TODO Auto-generated method stub
-		return null;
+	public ReservaDto fazerReserva(ReservaDto reserva) {
+		var reEnt = new ReservaEntity(reserva);
+		reEnt.atualizaCliente(clService.findById(reserva.getClienteId()).orElseThrow(()->new IllegalArgumentException("id do cliente invalido")));
+		reEnt.atualizaMesa(meService.findById(reserva.getMesaId()).orElseThrow(()->new IllegalArgumentException("id da mesa invalido")));
+		reRepository.save(reEnt);
+		return new ReservaDto(reEnt);
 	}
 
 	@Override
@@ -67,6 +61,8 @@ public class ReservaServiceImpl implements ReservaService {
 		}
 	}
 	
+
+	
 	private ReservaDto atualizaStatus(ReservaEntity resEnt, StatusEnum status) {
 		resEnt.atualizaStatus(status);
 		return reservaSave(resEnt);
@@ -76,6 +72,20 @@ public class ReservaServiceImpl implements ReservaService {
 		var resSave = reRepository.save(resEnt);
 		return new ReservaDto(resSave);
 	}
+
+	@Override
+	public List<ReservaDto> getReservas(Long restauranteId, StatusEnum status) {
+		var reEnt = reRepository.findByRestauranteIdAndStatus(restauranteId,status);
+		return reEnt.stream().map(ReservaDto::new).toList();
+	}
+
+	@Override
+	public Optional<ReservaEntity> findById(Long reservaId) {
+		return reRepository.findById(reservaId);
+	}
+
+
+
 	
 
 

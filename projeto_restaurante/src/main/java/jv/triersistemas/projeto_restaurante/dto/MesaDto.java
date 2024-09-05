@@ -13,6 +13,7 @@ public class MesaDto {
 	private Integer numero;
 	private Integer capacidadePessoas;
 	
+	
 	public MesaDto(MesaEntity entity){
 		id = entity.getId();
 		numero = entity.getNumero();

@@ -23,7 +23,6 @@ public class ClienteDto {
 	private Integer quantidadeReservas;
 	private BigDecimal quantidadeValorGasto;
 	private Boolean flgBloqueado;
-	private RestauranteDto restaurante;
 	
 	public ClienteDto(ClienteEntity entity) {
 		id = entity.getId();
@@ -37,6 +36,5 @@ public class ClienteDto {
 		quantidadeReservas = entity.getQuantidadeReservas();
 		quantidadeValorGasto = entity.getQuantidadeValorGasto();
 		flgBloqueado = entity.getFlgBloqueado();
-		restaurante = new RestauranteDto(entity.getRestaurante());
 	}
 }

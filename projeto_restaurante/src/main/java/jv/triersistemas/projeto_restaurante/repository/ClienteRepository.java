@@ -9,8 +9,6 @@ import org.springframework.stereotype.Repository;
 import jv.triersistemas.projeto_restaurante.entity.ClienteEntity;
 
 @Repository
-public interface ClienteRepository extends JpaRepository<ClienteEntity, Long> {
+public interface ClienteRepository extends JpaRepository<ClienteEntity, Long>, ClienteRepositoryCustom {
 
-	List<ClienteEntity> findByNome(String nome);
-	Optional<ClienteEntity> findByEmail(String email);
 }

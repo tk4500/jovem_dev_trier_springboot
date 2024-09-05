@@ -1,10 +1,9 @@
 package jv.triersistemas.projeto_restaurante.controller;
 
-import java.time.LocalDate;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,22 +21,20 @@ public class ReservaController {
 
 	@Autowired
 	ReservaService reservaService;
-
-	@GetMapping("/disponivel")
-	public ResponseEntity<?> getDisponibilidade(@RequestParam("mesa") Integer mesa,
-			@RequestParam("data") LocalDate data) {
+	
+	@GetMapping("/{restauranteId}")
+	public ResponseEntity<?> getReservas(@PathVariable Long restauranteId,@RequestParam("status") StatusEnum status) {
 		try {
-			return ResponseEntity.ok(reservaService.getDisponibilidade(mesa, data));
-		} catch (Exception e) {
+			return ResponseEntity.ok(reservaService.getReservas(restauranteId, status));
+		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(404).body(e.getMessage());
 		}
-
 	}
 
 	@PostMapping
-	public ResponseEntity<?> postReserva(@RequestBody ReservaDto reserva) {
+	public ResponseEntity<?> fazerReserva(@RequestBody ReservaDto reserva) {
 		try {
-			return ResponseEntity.ok(reservaService.postReserva(reserva));
+			return ResponseEntity.ok(reservaService.fazerReserva(reserva));
 		} catch (Exception e) {
 			return ResponseEntity.status(404).body(e.getMessage());
 		}

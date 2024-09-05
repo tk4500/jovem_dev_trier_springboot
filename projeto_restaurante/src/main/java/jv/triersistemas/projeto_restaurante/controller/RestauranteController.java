@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import jv.triersistemas.projeto_restaurante.dto.ReservaDto;
 import jv.triersistemas.projeto_restaurante.dto.RestauranteDto;
 import jv.triersistemas.projeto_restaurante.service.RestauranteService;
 
